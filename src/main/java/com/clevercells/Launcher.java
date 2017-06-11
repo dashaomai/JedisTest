@@ -1,6 +1,8 @@
 package com.clevercells;
 
 import com.clevercells.redis.RedisManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.*;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.Map;
  * Created by dasha on 2017/6/8.
  */
 public class Launcher {
+    private static final Logger log = LoggerFactory.getLogger("Launcher");
 
     private static final String ITEM_PREFIX = "item_";
     private static final int ITEM_PREFIX_LENGTH = ITEM_PREFIX.length();
@@ -58,14 +61,14 @@ public class Launcher {
 
             cursor = result.getStringCursor();
 
-            System.out.println("cursor = " + cursor);
+            log.info("cursor = " + cursor);
         } while (!CURSOR_END.equals(cursor));
 
         jedis.close();
 
         final int count = items.size();
 
-        System.out.println("count = " + count);
+        log.info("count = " + count);
     }
 
     private static void incVersionsForBackpack(final ShardedJedisPool pool, final String key) {
@@ -77,10 +80,8 @@ public class Launcher {
     }
 
     private static void opeartionByManager(final String key) {
-        final JedisCommands client = RedisManager.GetClient();
+        final Boolean result = RedisManager.Execute(client -> client.exists(key));
 
-        System.out.println(client.exists(key));
-
-        RedisManager.ReleaseClient(client);
+        log.info("{} exists? {}", key, result);
     }
 }

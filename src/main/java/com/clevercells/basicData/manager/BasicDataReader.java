@@ -23,14 +23,6 @@ public class BasicDataReader implements IDataReader<BasicDataBean, BasicDataKeya
   }
 
   @Override
-  public DataMeta getMeta(final BasicDataKeyable keyable) {
-    final JedisCommands client = RedisManager.GetClient();
-
-    RedisManager.ReleaseClient(client);
-    return null;
-  }
-
-  @Override
   public BasicDataBean getData(final BasicDataKeyable keyable) {
     final JedisCommands client = RedisManager.GetClient();
 
@@ -51,5 +43,15 @@ public class BasicDataReader implements IDataReader<BasicDataBean, BasicDataKeya
     } else {
       return null;
     }
+  }
+
+  @Override
+  public DataMeta getMeta() {
+    return null;
+  }
+
+  @Override
+  public void setChange() {
+
   }
 }

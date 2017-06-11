@@ -12,7 +12,6 @@ import redis.clients.jedis.JedisCommands;
 public class MetaReader<K extends IKeyable> implements IMetable<K> {
     private static final Logger log = LoggerFactory.getLogger("MetaReader");
 
-    @Override
     public DataMeta getMeta(final K keyable) {
         final String key = keyable.getKey();
 
@@ -35,5 +34,15 @@ public class MetaReader<K extends IKeyable> implements IMetable<K> {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public DataMeta getMeta() {
+        return null;
+    }
+
+    @Override
+    public void setChange() {
+
     }
 }
