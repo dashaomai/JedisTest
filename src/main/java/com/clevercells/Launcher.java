@@ -1,11 +1,12 @@
 package com.clevercells;
 
+import com.clevercells.basicData.BasicDataBean;
+import com.clevercells.common.RedisData;
 import com.clevercells.redis.RedisManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,12 @@ public class Launcher {
     private static final String CURSOR_END = "0";
 
     public static void main(String[] args) {
-        final String key = "data_10000:user_35:bp_101";
 
-        opeartionByManager(key);
+        final BasicDataBean bean = RedisData.GetBasicDataBean(10000, 125);
+        bean.level = 5;
+        bean.nickname = "Bob Jiang";
+
+        RedisData.Save(bean);
     }
 
     private static void createAndQueryItems(final ShardedJedisPool pool, final String key) {

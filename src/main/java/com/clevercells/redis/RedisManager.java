@@ -2,11 +2,8 @@ package com.clevercells.redis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.JedisCommands;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-
-import java.io.Closeable;
-import java.io.IOException;
 
 /**
  * Redis 管理器类
@@ -17,7 +14,7 @@ public class RedisManager {
 
     private static final JedisPool pool = new JedisPool("localhost", 6379);
 
-    public static JedisCommands GetClient() {
+    public static Jedis GetClient() {
         log.info("获取 Redis 连接");
 
         try {
@@ -29,20 +26,15 @@ public class RedisManager {
         }
     }
 
-    public static void ReleaseClient(final JedisCommands client) {
+    public static void ReleaseClient(final Jedis client) {
         if (null != client) {
             log.info("归还 Redis 连接");
-            final Closeable client2 = (Closeable)client;
-            try {
-                client2.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            client.close();
         }
     }
 
     public static <T> T Execute(final IRedisExecution<T> execution) {
-        JedisCommands client = GetClient();
+        Jedis client = GetClient();
 
         if (null != client) {
             try {

@@ -1,18 +1,18 @@
 package com.clevercells.basicData;
 
-import com.clevercells.common.IKeyable;
+import com.clevercells.interfaces.IKey;
 
 /**
  *
  * Created by dasha on 2017/6/9.
  */
-public class BasicDataKeyable implements IKeyable {
+public class BasicDataKey implements IKey {
     public final int gameId;
     public final long userId;
 
     private final String key;
 
-    public BasicDataKeyable(
+    public BasicDataKey(
             final int gameId,
             final long userId
     ) {
@@ -25,5 +25,15 @@ public class BasicDataKeyable implements IKeyable {
     @Override
     public String getKey() {
         return key;
+    }
+
+    @Override
+    public String getChangeListKey() {
+        return "game_" + gameId + ":bd";
+    }
+
+    @Override
+    public String getId() {
+        return "game_" + gameId + ":user_" + userId;
     }
 }
