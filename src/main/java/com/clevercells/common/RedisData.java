@@ -44,9 +44,11 @@ public class RedisData {
 
     public static BasicDataBean GetBasicDataBean(final int gameId, final long userId) {
         final BasicDataBean bean = new BasicDataBean(gameId, userId);
-        bean.LoadFromRedis();
-
-        return bean;
+        if (bean.LoadFromRedis()) {
+            return bean;
+        } else {
+            return null;
+        }
     }
 
     public static Boolean Save(final AbstractBean bean) {
