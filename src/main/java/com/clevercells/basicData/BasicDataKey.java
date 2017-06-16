@@ -3,7 +3,7 @@ package com.clevercells.basicData;
 import com.clevercells.interfaces.IKey;
 
 /**
- *
+ * 用户基础数据的 Key 对象
  * Created by dasha on 2017/6/9.
  */
 public class BasicDataKey implements IKey {

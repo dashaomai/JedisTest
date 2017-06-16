@@ -3,11 +3,11 @@ package com.clevercells.common;
 import com.clevercells.basicData.BasicDataBean;
 
 /**
- * 用于获取各类数据 Bean 实例的工厂类
+ * 用于获取各类数据 Bean 实例的数据门户类
  *
  * Created by Bob Jiang on 2017/6/12.
  */
-public class RedisData {
+public class RedisDataFacade {
 
     public static BasicDataBean CreateBasicDataBean(
             final int gameId,

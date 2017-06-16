@@ -5,7 +5,6 @@ import com.clevercells.interfaces.IKey;
 import com.clevercells.redis.RedisManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Pipeline;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,9 +19,15 @@ import java.util.Map;
 public abstract class AbstractBean<K extends IKey> {
     private static final Logger log = LoggerFactory.getLogger("AbstractBean");
 
-    protected static Field[] cacheFields = null;
+    protected static Field[] redisCachableFields = null;
 
-    private static Field[] GetAnnotationedFields(Class clazz) {
+    /**
+     * 扫描并装配本类当中，使用了 RedisCachable 注解的所有成员变量
+     *
+     * @param clazz
+     * @return
+     */
+    private static Field[] ScanRedisCachableFields(Class clazz) {
         final Field[] fields = clazz.getFields();
 
         final List<Field> annotatedFields = new ArrayList<>();
@@ -39,29 +44,32 @@ public abstract class AbstractBean<K extends IKey> {
         return annotatedFields.toArray(results);
     }
 
+    /**
+     * 初始化注解的所有成员变量
+     */
+    private synchronized void InitAnnotations() {
+        if (null == redisCachableFields) {
+            redisCachableFields = ScanRedisCachableFields(this.getClass());
+        }
+    }
+
     protected final K key;
 
     protected AbstractBean(
             final K key
     ) {
-        if (null == cacheFields) {
+        if (null == redisCachableFields) {
             InitAnnotations();
         }
 
         this.key = key;
     }
 
-    private synchronized void InitAnnotations() {
-        if (null == cacheFields) {
-            cacheFields = GetAnnotationedFields(this.getClass());
-        }
-    }
-
     public Boolean LoadFromRedis() {
         final String key1 = key.getKey();
 
         return RedisManager.Execute(client -> {
-            for (final Field field : cacheFields) {
+            for (final Field field : redisCachableFields) {
                 final String name = field.getName();
                 final String typeName = field.getType().getTypeName();
 
@@ -94,7 +102,7 @@ public abstract class AbstractBean<K extends IKey> {
         return RedisManager.Execute(client -> {
             final Map<String, String> values = new HashMap<>();
 
-            for (final Field field : cacheFields) {
+            for (final Field field : redisCachableFields) {
                 final String name = field.getName();
                 final String typeName = field.getType().getTypeName();
 

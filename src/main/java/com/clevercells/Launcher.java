@@ -1,7 +1,7 @@
 package com.clevercells;
 
 import com.clevercells.basicData.BasicDataBean;
-import com.clevercells.common.RedisData;
+import com.clevercells.common.RedisDataFacade;
 import com.clevercells.redis.RedisManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +26,11 @@ public class Launcher {
 
     public static void main(String[] args) {
 
-        final BasicDataBean bean = RedisData.GetBasicDataBean(10000, 125);
+        final BasicDataBean bean = RedisDataFacade.GetBasicDataBean(10000, 125);
         bean.level = 5;
         bean.nickname = "Bob Jiang";
 
-        RedisData.Save(bean);
+        RedisDataFacade.Save(bean);
     }
 
     private static void createAndQueryItems(final ShardedJedisPool pool, final String key) {
